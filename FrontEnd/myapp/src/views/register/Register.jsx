@@ -80,7 +80,7 @@ function Register() {
           ]);
         });
       } else {
-        toast.error("user already exist");
+        toast.error(error.response?.data?.message || "Registration failed");
         navigate("/login");
       }
     },

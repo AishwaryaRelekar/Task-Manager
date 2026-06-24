@@ -4,83 +4,83 @@ const jwt = require("jsonwebtoken");
 const { reg } = require("../validation/validation");
 const { success } = require("zod");
 
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 
-const otpStorage = {};
-const attempts = {};
-const verified = {}
+// const otpStorage = {};
+// const attempts = {};
+// const verified = {}
 
-const generateOtp = () =>
-  Math.floor(100000 + Math.random() * 900000).toString();
+// const generateOtp = () =>
+//   Math.floor(100000 + Math.random() * 900000).toString();
 
-exports.sendOtp = async (req, res) => {
-  try {
+// exports.sendOtp = async (req, res) => {
+//   try {
     
-    const { email } = req.body;
+//     const { email } = req.body;
   
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser)
-      return res.status(409).json({ message: "User already exists" });
-    const otp = generateOtp();
-    otpStorage[email] = {otp,expiresAt: Date.now() + 1*60*1000};
-    console.log(otp);
-    console.log(otpStorage);
+//     const existingUser = await prisma.user.findUnique({ where: { email } });
+//     if (existingUser)
+//       return res.status(409).json({ message: "User already exists" });
+//     const otp = generateOtp();
+//     otpStorage[email] = {otp,expiresAt: Date.now() + 1*60*1000};
+//     console.log(otp);
+//     console.log(otpStorage);
   
-    verified[email] = false;
-    attempts[email] = 0;
+//     verified[email] = false;
+//     attempts[email] = 0;
   
-    // setTimeout(() => delete otpStorage[email], 1 * 60 * 1000);
+//     // setTimeout(() => delete otpStorage[email], 1 * 60 * 1000);
   
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
+//     const transporter = nodemailer.createTransport({
+//       service: "gmail",
       
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
   
-    transporter.verify((err, success) => {
-      if(err) console.log("smpt error",err);
-      else console.log("smpt connected");
+//     transporter.verify((err, success) => {
+//       if(err) console.log("smpt error",err);
+//       else console.log("smpt connected");
       
       
-    })
-    const mailOption = {
-      from: `${process.env.EMAIL_USER}`,
-      to: email,
-      subject: "Your OTP",
-      html: `<h1>${otp}</h1>`,
-    };
+//     })
+//     const mailOption = {
+//       from: `${process.env.EMAIL_USER}`,
+//       to: email,
+//       subject: "Your OTP",
+//       html: `<h1>${otp}</h1>`,
+//     };
   
-    await transporter.sendMail(mailOption);
-    res.json({ message: "OTP sent" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({message:"error sending otp"})
+//     await transporter.sendMail(mailOption);
+//     res.json({ message: "OTP sent" });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({message:"error sending otp"})
     
-  }
-};
+//   }
+// };
 
-exports.verifyOtp = (req, res) => {
-  const { email, otp } = req.body;
+// exports.verifyOtp = (req, res) => {
+//   const { email, otp } = req.body;
 
-  if (!otpStorage[email])
-    return res.status(400).json({message:'ot expiered or not sent'})
+//   if (!otpStorage[email])
+//     return res.status(400).json({message:'ot expiered or not sent'})
 
-  if (Date.now() > otpStorage[email].expiresAt) {
-    delete otpStorage[email]
-    return res.status(400).json({message:'otp expiered'})
-  }
+//   if (Date.now() > otpStorage[email].expiresAt) {
+//     delete otpStorage[email]
+//     return res.status(400).json({message:'otp expiered'})
+//   }
 
-  if (otpStorage[email].otp != otp)
-    return res.status(400).json({message:'Invalid otp'})
+//   if (otpStorage[email].otp != otp)
+//     return res.status(400).json({message:'Invalid otp'})
   
-  verified[email] = true;
-  delete otpStorage[email]
+//   verified[email] = true;
+//   delete otpStorage[email]
 
-  return res.json({ message: "otp verified" });
-};
+//   return res.json({ message: "otp verified" });
+// };
 
 exports.register = async (req, res) => {
   const validatedData = reg.safeParse(req.body);
@@ -95,8 +95,8 @@ exports.register = async (req, res) => {
 
   const { name, email, password, country, state, city } = validatedData.data;
 
-  if (!verified[email])
-    return res.status(400).json({message:"email not verified.verify ur otp"})
+  // if (!verified[email])
+  //   return res.status(400).json({message:"email not verified."})
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser)
@@ -126,7 +126,7 @@ exports.register = async (req, res) => {
     );
 
 
-    delete verified[email]
+    // delete verified[email]
 
     res.json({
       success: true,
