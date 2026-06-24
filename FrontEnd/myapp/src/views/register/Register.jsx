@@ -12,9 +12,9 @@ const countries = Country.getAllCountries();
 
 function Register() {
   const [form] = Form.useForm();
-  const [otp, setOtp] = useState("");
-  const [isOtpSent, setIsOtpSent] = useState(false);
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  // const [otp, setOtp] = useState("");
+  // const [isOtpSent, setIsOtpSent] = useState(false);
+  // const [isOtpVerified, setIsOtpVerified] = useState(false);
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -25,34 +25,34 @@ function Register() {
   // console.log(countries, states, cities);
   // console.log(selectedCountry);
 
-  const sendOtp = async () => {
-    const email = form.getFieldValue("email");
-    if (!email) return toast.error("Enter email first!");
+  // const sendOtp = async () => {
+  //   const email = form.getFieldValue("email");
+  //   if (!email) return toast.error("Enter email first!");
 
-    try {
-      await axios.post(`${API_BASE_URL}/api/send-otp`, { email });
-      toast.success("OTP sent!");
-      setIsOtpSent(true);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send otp");
-    }
-  };
+  //   try {
+  //     await axios.post(`${API_BASE_URL}/api/send-otp`, { email });
+  //     toast.success("OTP sent!");
+  //     setIsOtpSent(true);
+  //   } catch (err) {
+  //     toast.error(err.response?.data?.message || "Failed to send otp");
+  //   }
+  // };
 
-  const verifyOtp = async (value) => {
-    setOtp(value);
-    if (value.length != 6) return;
-    try {
-      await axios.post(`${API_BASE_URL}/api/verify-otp`, {
-        email: form.getFieldValue("email"),
-        otp: value,
-      });
-      toast.success("Email verified!");
-      setIsOtpVerified(true);
-    } catch (err) {
-      setIsOtpVerified(false);
-      toast.error(err.response?.data?.message || "Invalid otp");
-    }
-  };
+  // const verifyOtp = async (value) => {
+  //   setOtp(value);
+  //   if (value.length != 6) return;
+  //   try {
+  //     await axios.post(`${API_BASE_URL}/api/verify-otp`, {
+  //       email: form.getFieldValue("email"),
+  //       otp: value,
+  //     });
+  //     toast.success("Email verified!");
+  //     setIsOtpVerified(true);
+  //   } catch (err) {
+  //     setIsOtpVerified(false);
+  //     toast.error(err.response?.data?.message || "Invalid otp");
+  //   }
+  // };
   const registerMutation = useMutation({
     mutationFn: async (formData) => {
       return await axios.post(`${API_BASE_URL}/api/register`, formData);
@@ -100,7 +100,7 @@ function Register() {
 
   const onFinish = (values) => {
     // console.log(values);
-    if (!isOtpVerified) return toast.error("Verify OTP before registering.");
+    // if (!isOtpVerified) return toast.error("Verify OTP before registering.");
 
     if (values.password !== values.confirmPassword) {
       toast.error("Passwords do not match");
@@ -151,7 +151,7 @@ function Register() {
                 </Form.Item>
 
                 {/* Email  */}
-                {/* <Form.Item
+                <Form.Item
                   label="Email"
                   name="email"
                   rules={[
@@ -163,8 +163,8 @@ function Register() {
                   ]}
                 >
                   <Input />
-                </Form.Item> */}
-                <Form.Item
+                </Form.Item>
+                {/* <Form.Item
                   label="Email"
                   name="email"
                   rules={[{ required: true }]}
@@ -179,9 +179,9 @@ function Register() {
                       Send OTP
                     </Button>
                   </div>
-                </Form.Item>
+                </Form.Item> */}
 
-                {isOtpSent && (
+                {/* {isOtpSent && (
                   <Form.Item label="Enter OTP">
                     <Input
                       value={otp}
@@ -189,7 +189,7 @@ function Register() {
                       disabled={isOtpVerified}
                     />
                   </Form.Item>
-                )}
+                )} */}
 
                 <Form.Item
                   label="Password"
