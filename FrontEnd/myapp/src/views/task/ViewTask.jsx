@@ -4,9 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
-
-const API = "http://localhost:5050/api";
+import { API_BASE_URL } from "../../api";
 
 function ViewTask() {
   const navigate = useNavigate();
@@ -24,15 +22,14 @@ function ViewTask() {
     return () => clearTimeout(id);
   }, [search]);
 
-
   const fetchTask = useCallback(async () => {
     const res = await axios.get(
-      `${API}/task/getTasks?page=${page}&limit=${limit}&search=${debouncedSearch}&status=${statusFilter}`,
+      `${API_BASE_URL}/task/getTasks?page=${page}&limit=${limit}&search=${debouncedSearch}&status=${statusFilter}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      }
+      },
     );
     return res.data;
   }, [page, limit, debouncedSearch, statusFilter]);
@@ -46,7 +43,7 @@ function ViewTask() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return await axios.delete(`${API}/task/deleteTask/${id}`, {
+      return await axios.delete(`${API_BASE_URL}/task/deleteTask/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -64,13 +61,13 @@ function ViewTask() {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }) => {
       return axios.put(
-        `${API}/task/updateStatus/${id}`,
+        `${API_BASE_URL}/task/updateStatus/${id}`,
         { status },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
     },
     onSuccess: () => {
@@ -131,12 +128,13 @@ function ViewTask() {
             Edit
           </Button>
           <Button
-           color="cyan" variant="solid"
+            color="cyan"
+            variant="solid"
             className="ms-2 text-dark  "
             onClick={() =>
               statusMutation.mutate({ id: record.id, status: "completed" })
             }
-            disabled={record.status === "completed" }
+            disabled={record.status === "completed"}
           >
             Completed
           </Button>

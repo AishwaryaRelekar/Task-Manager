@@ -5,6 +5,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { loginVaidate } from "../../validation/validation";
+import { API_BASE_URL } from "../../api";
 
 function Login() {
   const navigate = useNavigate();
@@ -12,10 +13,7 @@ function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (loginData) => {
-      const res = await axios.post(
-        "http://localhost:5050/api/login",
-        loginData
-      );
+      const res = await axios.post(`${API_BASE_URL}/api/login`, loginData);
       return res.data;
     },
     onSuccess: (data) => {

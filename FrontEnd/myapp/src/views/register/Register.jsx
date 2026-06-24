@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Select } from "antd";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { Country, State, City } from "country-state-city";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { reg } from "../../validation/validation";
-
+import { API_BASE_URL } from "../../api";
 
 const countries = Country.getAllCountries();
 
@@ -22,7 +22,6 @@ function Register() {
 
   const navigate = useNavigate();
 
-
   // console.log(countries, states, cities);
   // console.log(selectedCountry);
 
@@ -31,33 +30,32 @@ function Register() {
     if (!email) return toast.error("Enter email first!");
 
     try {
-      
-      await axios.post("http://localhost:5050/api/send-otp", { email });
+      await axios.post(`${API_BASE_URL}/api/send-otp`, { email });
       toast.success("OTP sent!");
       setIsOtpSent(true);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to send otp")
+      toast.error(err.response?.data?.message || "Failed to send otp");
     }
   };
 
   const verifyOtp = async (value) => {
     setOtp(value);
     if (value.length != 6) return;
-    try{
-      await axios.post("http://localhost:5050/api/verify-otp", {
+    try {
+      await axios.post(`${API_BASE_URL}/api/verify-otp`, {
         email: form.getFieldValue("email"),
         otp: value,
       });
       toast.success("Email verified!");
       setIsOtpVerified(true);
-    } catch (err)  {
+    } catch (err) {
       setIsOtpVerified(false);
-      toast.error(err.response?.data?.message || 'Invalid otp')
+      toast.error(err.response?.data?.message || "Invalid otp");
     }
   };
   const registerMutation = useMutation({
     mutationFn: async (formData) => {
-      return await axios.post("http://localhost:5050/api/register", formData);
+      return await axios.post(`${API_BASE_URL}/api/register`, formData);
     },
     onSuccess: (res) => {
       const { token, role } = res.data;
@@ -135,19 +133,14 @@ function Register() {
           <div className="col-lg-6 col-md-8 col-sm-12">
             <div className="p-4 border rounded bg-white shadow-sm shadow w-100">
               <h2 className="text-center mb-4">Registration Form</h2>
-              <Form
-                onFinish={onFinish}
-                layout="vertical"
-                form={form}
-                
-              >
+              <Form onFinish={onFinish} layout="vertical" form={form}>
                 {/* Name  */}
                 <Form.Item
                   label="Name"
                   name="name"
                   rules={[
                     { required: true, message: "enter name" },
-                    
+
                     {
                       pattern: /^[A-Za-z]+$/,
                       message: "name must only alphabets",
@@ -178,7 +171,11 @@ function Register() {
                 >
                   <div style={{ display: "flex", gap: "10px" }}>
                     <Input disabled={isOtpSent || isOtpVerified} />
-                    <Button type="primary" onClick={sendOtp} disabled={isOtpSent}>
+                    <Button
+                      type="primary"
+                      onClick={sendOtp}
+                      disabled={isOtpSent}
+                    >
                       Send OTP
                     </Button>
                   </div>
@@ -191,7 +188,6 @@ function Register() {
                       onChange={(e) => verifyOtp(e.target.value)}
                       disabled={isOtpVerified}
                     />
-                    
                   </Form.Item>
                 )}
 

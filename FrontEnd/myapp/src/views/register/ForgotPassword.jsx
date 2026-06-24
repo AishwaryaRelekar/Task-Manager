@@ -5,14 +5,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginVaidate } from "../../validation/validation";
-
+import { API_BASE_URL } from "../../api";
 
 function ForgotPassword() {
   const navigate = useNavigate();
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
   const forgetPwd = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post(`http://localhost:5050/api/forgotPwd`, data);
+      const res = await axios.post(`${API_BASE_URL}/api/forgotPwd`, data);
       return res.data;
     },
     onSuccess: () => {
@@ -22,23 +22,23 @@ function ForgotPassword() {
     onError: () => toast.error("email id not registered"),
   });
 
- const onFinish = async (values) => {
-     const result = loginVaidate.safeParse(values);
- 
-     if (!result.success) {
-       const fieldErrors = result.error.flatten().fieldErrors;
-       Object.keys(fieldErrors).forEach((field) => {
-         form.setFields([
-           {
-             name: field,
-             errors: [fieldErrors[field][0]],
-           },
-         ]);
-       });
-       return;
-     }
-     forgetPwd.mutate(result.data);
-   };
+  const onFinish = async (values) => {
+    const result = loginVaidate.safeParse(values);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      Object.keys(fieldErrors).forEach((field) => {
+        form.setFields([
+          {
+            name: field,
+            errors: [fieldErrors[field][0]],
+          },
+        ]);
+      });
+      return;
+    }
+    forgetPwd.mutate(result.data);
+  };
 
   return (
     <div className="container my-5 w-75">

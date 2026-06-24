@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addTask } from "../validation/validation";
+import { API_BASE_URL } from "../../api";
 
 function AddTask() {
   const [form] = Form.useForm();
@@ -12,13 +13,13 @@ function AddTask() {
   const taskMutation = useMutation({
     mutationFn: async (taskData) => {
       const res = await axios.post(
-        "http://localhost:5050/api/task/addTask",
+        `${API_BASE_URL}/api/task/addTask`,
         taskData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       return res.data;
     },
@@ -27,9 +28,7 @@ function AddTask() {
       navigate("/view-task");
     },
     onError: () => {
-    
-        toast.error("failed to add");
-      
+      toast.error("failed to add");
     },
   });
 

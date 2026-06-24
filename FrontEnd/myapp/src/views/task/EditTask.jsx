@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addTask } from "../../validation/validation";
+import { API_BASE_URL } from "../../api";
 
 function EditTask() {
   const navigate = useNavigate();
@@ -15,12 +16,12 @@ function EditTask() {
     queryKey: ["task", id],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:5050/api/task/getSingleTask/${id}`,
+        `${API_BASE_URL}/api/task/getSingleTask/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       console.log(data);
 
@@ -45,13 +46,13 @@ function EditTask() {
   const updateMutation = useMutation({
     mutationFn: async (val) => {
       const res = await axios.put(
-        `http://localhost:5050/api/task/updateTask/${id}`,
+        `${API_BASE_URL}/api/task/updateTask/${id}`,
         val,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       return res.data;
     },
