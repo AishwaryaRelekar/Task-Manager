@@ -24,7 +24,7 @@ function ViewTask() {
 
   const fetchTask = useCallback(async () => {
     const res = await axios.get(
-      `${API_BASE_URL}/task/getTasks?page=${page}&limit=${limit}&search=${debouncedSearch}&status=${statusFilter}`,
+      `${API_BASE_URL}/api/task/getTasks?page=${page}&limit=${limit}&search=${debouncedSearch}&status=${statusFilter}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -43,7 +43,7 @@ function ViewTask() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id) => {
-      return await axios.delete(`${API_BASE_URL}/task/deleteTask/${id}`, {
+      return await axios.delete(`${API_BASE_URL}/api/task/deleteTask/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -61,7 +61,7 @@ function ViewTask() {
   const statusMutation = useMutation({
     mutationFn: ({ id, status }) => {
       return axios.put(
-        `${API_BASE_URL}/task/updateStatus/${id}`,
+        `${API_BASE_URL}/api/task/updateStatus/${id}`,
         { status },
         {
           headers: {
