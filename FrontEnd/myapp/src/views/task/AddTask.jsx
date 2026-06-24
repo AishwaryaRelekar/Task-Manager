@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { addTask } from "../validation/validation";
+import { addTask } from "../../validation/validation";
 import { API_BASE_URL } from "../../api";
 
 function AddTask() {
