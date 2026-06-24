@@ -11,6 +11,6 @@ app.use(cors());
 app.use("/api", authRoutes);
 app.use("/api/task",taskRoutes)
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5050;
 
 app.listen(port, () => console.log(`server connected ${port}`));
